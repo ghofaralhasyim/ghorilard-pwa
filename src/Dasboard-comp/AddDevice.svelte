@@ -35,18 +35,18 @@
                     });
                 }
                 try {
-                    const res = await fetch('https://ghorilard.herokuapp.com/kolam/', {
+                    const res = await fetch('https://ghorilard.herokuapp.com/kolam', {
                         method: "POST",
                         headers: {
                             'Content-Type' : 'application/json',
                             'token': session.access_token,
                             '_id': session._id
                         },
-                        body: {
+                        body: JSON.stringify({
                             "nama_kolam" : name,
                             "kode_device" : id_device,
                             "id_user": session._id
-                        }
+                        })
                     }).then(checkStatus)
                     .then(parseJSON)
                 } catch (e) { 

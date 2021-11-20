@@ -13,11 +13,12 @@
     import AddDevice from '../Dasboard-comp/AddDevice.svelte';;
     import Device from '../Dasboard-comp/Device.svelte';
     import Test from '../Dasboard-comp/Test.svelte';
-    import { apiData, activeTabs, deviceActive } from '../Dasboard-comp/data';
+    import Analytics from '../Dasboard-comp/Analytics.svelte';
+    import { apiData, activeTabs, id_device } from '../Dasboard-comp/data';
 
     let sidebarToggled = false;
-    $activeTabs = 'Dasboard';
-    $deviceActive = '';
+    $activeTabs = 'Helpdesk';
+    $id_device = 'Rt45rgy';
 
     const changeTabs = (e) => {
         $activeTabs = e;
@@ -116,6 +117,8 @@
                     <AddDevice />
                 {:else if $activeTabs == 'Device'}
                     <Device />
+                {:else if $activeTabs == 'Analytics'}
+                    <Analytics />
                 {:else if $activeTabs == 'test'}
                     <Test />
                 {:else}

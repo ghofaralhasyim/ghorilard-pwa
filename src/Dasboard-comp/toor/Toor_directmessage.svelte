@@ -1,36 +1,6 @@
 <script>
     import io from 'socket.io-client';
-    import { Session } from 'svelte-session-manager';
-    import { comment } from './data';
     import { onMount } from 'svelte';
-
-    let session = new Session(localStorage);
-
-    let message;
-    let dariserver;
-    const socket = io("https://ghorilard.herokuapp.com/");
-
-    // socket.on('tests', data => {
-    //     console.log("THISSSSSS :"+data);
-    //     dariserver = data;
-    // });
-    // socket.emit("text",'tes')
-
-
-    socket.on('connect', () => {
-        socket.emit('chat','Alvin');
-        socket.on('comment', data => {
-            console.log(data);
-            $comment = [...$comment,data];
-        })
-    });
-
-    let xh;
-    onMount(() => {
-        let chatSection = document.getElementById('chatSection');
-        let x = chatSection.scrollHeight;
-        chatSection.scrollTop = xh;
-    });
 
     let value='',
         name = 'textarea',
@@ -44,43 +14,11 @@
 	
 	$: rows = (value.match(/\n/g) || []).length + 1 || 1;
 
-    async function sendChat(){
-        if(session.isValid) {
-            const parseJSON = (resp) => (resp.json ? resp.json() : resp);
-            const checkStatus = (resp) => {
-                if(resp.status >= 200 && resp.status < 300){
-                    value = '';
-                    return resp;
-                }
-                return parseJSON(resp).then((resp) => {
-                    throw resp;
-                });
-            }
-
-            try {
-                const res = await fetch('https://ghorilard.herokuapp.com/comment', {
-                    method: "POST",
-                    headers: {
-                        'Content-Type' : 'application/json',
-                        'token': session.access_token,
-                        '_id': session._id
-                    },
-                    body: JSON.stringify({
-                        "desc_comment": value,
-                    })
-                    }).then(checkStatus)
-                    .then(parseJSON)
-            } catch (e) { 
-                message = e;
-            }
-        }
-        socket.emit('chat',value);
-        socket.on('comment', data => {
-            console.log(data);
-            $comment = [...$comment,data];
-        })
-    }
-    console.log($comment.length);
+    onMount(() => {
+        let chatSection = document.getElementById('chatSection');
+        let x = chatSection.scrollHeight;
+        chatSection.scrollTop = x;
+    });
 </script>
 
 <div class="row">
@@ -93,7 +31,7 @@
                         <i class="ri-customer-service-2-fill" style="font-size: 1.25rem;"></i>
                     </div>
                     <div class="bcard-content">
-                        Help Desk 
+                        Richard Alvin 
                     </div>
                 </div>
             </div>
@@ -102,7 +40,7 @@
         <div class="row">
             <div class="col" style="padding:5px;">
                 <div class="card">
-                    <div class="chat-section" id="chatSection" bind:clientHeight={xh} scrollTop="{xh}">
+                    <div class="chat-section" id="chatSection">
                         <div class="chat-section-chat-send">
                             <div class="chat-info">
                                 14 Nov 2020
@@ -129,17 +67,19 @@
                                 Oh!
                             </div>
                         </div>
-                        {#if $comment.length != 0}
-                            {#each $comment as text}
-                            <div class="chat-section-chat-reply">
-                                <div class="buble">
-                                    {text}
-                                </div>
+                        <div class="chat-section-chat-send">
+                            <div class="buble-send">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Est fuga neque nemo similique soluta veniam facilis perspiciatis tempore commodi exercitationem maxime possimus blanditiis, nobis repudiandae alias perferendis mollitia iure aperiam in natus, provident, distinctio adipisci. Magni quaerat ipsa fuga minus natus veritatis, itaque maiores aut quidem autem esse dolorem. Iusto quaerat quas cupiditate nemo nobis eum magnam repellendus eaque, a error doloribus, et placeat amet vero nulla tempore blanditiis, at modi reiciendis praesentium est dolorum quae! Quae quibusdam harum quod quo mollitia dolorum asperiores distinctio voluptatum veniam autem, neque alias pariatur aliquid fuga corporis placeat id! Error tenetur consequatur est?
                             </div>
-                            {/each}
-                        {/if}
+                        </div>
+                        <div class="chat-section-chat-send">
+                            <div class="buble-send">
+                                {value}
+                            </div>
+                        </div>
+                        <div id="xchat"></div>
                     </div>
-                    <form on:submit|preventDefault={sendChat} class="form-chat mt-1">
+                    <form  class="form-chat mt-1">
                         <textarea rows="{rows}" style="--height: auto" bind:this={textarea} bind:value on:resize={grow}></textarea>
                         <button class="btn btn-blue-light" disabled={!value} type="submit">Send</button>
                     </form>
@@ -148,7 +88,7 @@
         </div>
 
     </div>
-    <div class="col col-lg-4 col-xl-3" style="padding:5px;">
+    <div class="col col-lg-4 col-xl-3" style="padding:5px; height:50vh;">
 
         Hello world!
 
@@ -156,7 +96,7 @@
 </div>
 
 <style lang="scss">
-    @import '../sass/Helpdesk.scss';
+    @import '../../sass/Helpdesk.scss';
 </style>
 
 

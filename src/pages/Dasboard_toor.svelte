@@ -1,8 +1,9 @@
 <script>
-import { onMount } from 'svelte';
+    import { onMount } from 'svelte';
 
     import { Session } from 'svelte-session-manager';
     import { push, replace } from 'svelte-spa-router';
+    import { t_activeTabs } from '../Dasboard-comp/toor/Toor_data';
 
     let session = new Session(localStorage);
 
@@ -10,16 +11,20 @@ import { onMount } from 'svelte';
         if(!session.isValid){
             push('/Login');
         }
+        if (session.auth == 2) {
+            replace('/Dasboard');
+        }
     })
 
-    import {activeTabs} from '../Dasboard-comp/data';
     import Main_toor from '../Dasboard-comp/toor/Main_toor.svelte';
+    import Toor_helpdesk from '../Dasboard-comp/toor/Toor_helpdesk.svelte';
+    import Toor_directmessage from '../Dasboard-comp/toor/Toor_directmessage.svelte';
 
     let sidebarToggled = false;
-    $activeTabs = 'Dasboard';
+    $t_activeTabs = 'Helpdesk';
 
     const changeTabs = (e) => {
-        $activeTabs = e;
+        $t_activeTabs = e;
     }
     async function sysLogout(){
         session.invalidate()
@@ -35,8 +40,11 @@ import { onMount } from 'svelte';
             </div>
             
             <div class="sideNav__menu">
-                <div class="sideNav__link {$activeTabs === 'Dasboard' ? 'sidebarActive' : ''}" on:click={() => changeTabs('Dasboard')}>
+                <div class="sideNav__link {$t_activeTabs === 'Dasboard' ? 'sidebarActive' : ''}" on:click={() => changeTabs('Dasboard')}>
                     <div class="sideNav__icon"><i class="ri-dashboard-3-line"></i><span> Dasboard</span></div>
+                </div>
+                <div class="sideNav__link {$t_activeTabs === 'Helpdesk' ? 'sidebarActive' : ''}" on:click={() => changeTabs('Helpdesk')}>
+                    <div class="sideNav__icon"><i class="ri-customer-service-2-fill"></i><span> Helpdesk </span></div>
                 </div>
             </div>
         </div>
@@ -56,8 +64,12 @@ import { onMount } from 'svelte';
         </nav>
 
         <div class="content">
-                {#if $activeTabs === 'Dasboard'}
+                {#if $t_activeTabs === 'Dasboard'}
                     <Main_toor />
+                {:else if $t_activeTabs === 'Helpdesk'}
+                    <Toor_helpdesk />
+                {:else if $t_activeTabs === 'chat'}
+                    <Toor_directmessage />
                 {:else}
                     :NotFound:
                 {/if}

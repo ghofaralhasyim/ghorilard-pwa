@@ -1,12 +1,12 @@
 <script>
-    import { user, activeTabs, deviceActive, nama_kolam } from './data';
+    import { user, activeTabs, nama_kolam, id_device } from './data';
 
     const changeTabs = (e) => {
         $activeTabs = e;
     }
     const deviceRedirect = (device,nama,tabs) => {
         $activeTabs = tabs;
-        $deviceActive = device;
+        $id_device = device;
         $nama_kolam = nama;
     }
     let devices = $user.data_kolam;

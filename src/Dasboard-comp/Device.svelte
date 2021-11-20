@@ -1,5 +1,5 @@
 <script>
-    import { deviceActive, nama_kolam, activeTabs } from './data';
+    import { subTabs, id_device, nama_kolam, activeTabs, monitoring_data } from './data';
     import { Session } from 'svelte-session-manager';
     import { push } from 'svelte-spa-router';
     import { chart } from "svelte-apexcharts";
@@ -23,6 +23,7 @@
     let graphLiveData_temperature = [];
     let graphLiveData_ph = [];
     let firstDate;
+    let liveable = true;
 
     async function getData(){
         if(session.isValid){
@@ -43,7 +44,7 @@
                         'Content-Type':'Application/json',
                         'token': session.access_token,
                         '_id': session._id,
-                        "kode_device": $deviceActive
+                        "kode_device": $id_device
                     },
                 }).then(checkStatus)
                 .then(parseJSON);
@@ -53,19 +54,25 @@
             }
 
             temp = data.data_hist;
+            $monitoring_data = data.data_hist;
 
             if (data == 'No Data for Graphic' || temp == null) {
                 message = data;
             }else{
                 let i = 0;
                 temp.forEach(element => {
-                    let date = new Date(element.timestamp);
+                    var date = new Date();
+                    var eldate = new Date(element.timestamp);
+                    var ndate = date.getDate();
+                    var nmonth = date.getMonth();
+                    var nyear = date.getFullYear();
+                    graphData_temperature[i] = [eldate.getTime(),element.water_temp];
+                    graphData_ph[i] = [eldate.getTime(),element.ph_meter];
                     
-                    graphData_temperature[i] = [date.getTime(),element.water_temp];
-                    graphData_ph[i] = [date.getTime(),element.ph_meter];
-    
-                    graphLiveData_temperature.push([date.getTime(),element.water_temp]);
-                    graphLiveData_ph.push([date.getTime(),element.ph_meter]);
+                    if (ndate == eldate.getDate() && nmonth == eldate.getMonth() && nyear == eldate.getFullYear()) {
+                        graphLiveData_temperature.push([eldate.getTime(),element.water_temp]);
+                        graphLiveData_ph.push([eldate.getTime(),element.ph_meter]);   
+                    }
                     i++;
                 });
 
@@ -81,6 +88,20 @@
                             dynamicAnimation: {
                             speed: 500
                             }
+                        },
+                        zoom: {
+                            enabled: true,
+                            type: 'x',
+                            resetIcon: {
+                                offsetX: -10,
+                                offsetY: 0,
+                                fillColor: '#fff',
+                                strokeColor: '#37474F'
+                            }
+                        },
+                        scrollbar: {
+                            enabled: true,
+                            type: 'y',
                         }
                     },
                     series: [
@@ -106,7 +127,7 @@
                     tooltip: {
                         x: {
                             format: 'dd MMM yyyy'
-                        }
+                        },
                     },
                     markers: {
                         size: 0,
@@ -156,6 +177,9 @@
     }
 
     const liveData = () => {
+        if (graphLiveData_ph.length < 1) {
+            liveable = false;
+        }
         const socket = io("https://ghorilard.herokuapp.com/");
         socket.on('tests', data => {
             console.log("this :"+data);
@@ -166,13 +190,14 @@
 
     const allData = () => {
         stopInterval();
+        liveable = true;
         optionsChart1 = {
             series: [
                 {
                     data: graphData_temperature,
                 },
                 {
-                    data: graphLiveData_ph,
+                    data: graphData_ph,
                 }
             ],
             xaxis:
@@ -182,6 +207,12 @@
                     min: firstDate,
                 },
         }
+    }
+
+    const deviceRedirect = (tabs,kode_device,nama) => {
+        $activeTabs = tabs;
+        $id_device = kode_device;
+        $nama_kolam = nama;
     }
 
     console.log(data)
@@ -222,7 +253,10 @@ Loading ...
                 on:click={() => liveData()}>
                     Live today
                 </button>
-                <div use:chart={optionsChart1}/>
+                    <div use:chart={optionsChart1} class:d-none={!liveable}/>
+                    <p class="mt-1 mb-1 bg-yellow-light color-dark-yellow" class:d-none={liveable} style="border-radius: 5px; padding:15px;">
+                        Sorry, i can't find any data today. Try to run your device.
+                    </p>
                 {/if}
             </div>
         </div>
@@ -231,6 +265,16 @@ Loading ...
 </div>
 
 <div class="col col-lg-4 col-xl-3" style="padding:5px;">
+    <div class="cursor-pointer" on:click={() => deviceRedirect('Analytics',$id_device,$nama_kolam)} style="margin-bottom: 10px;" >
+        <div class="row card pd-1">
+             <div class="col-2 text-middle text-center">
+                     <i class="ri-flask-line" style="font-size: 1.25rem;"></i>
+             </div>
+             <div class="col" style="padding-left: 10px;">
+                     Analytics<br>
+             </div>
+         </div>
+    </div>
     <div class="hover-light-blue cursor-pointer" on:click={() => changeTabs('Helpdesk')}>
         <div class="row card bg-light-blue pd-1 ">
              <div class="col-2 text-middle text-center">

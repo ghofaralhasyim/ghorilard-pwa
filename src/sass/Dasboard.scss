@@ -2,6 +2,11 @@
 
 // DASBORD
 
+p {
+  font-family: 'Poppins';
+  font-size: .75rem;
+}
+
 .bd-grid {
     display: flex;
     flex-direction: row;
@@ -43,8 +48,6 @@
 .cursor-pointer {
   cursor: pointer;
 }
-
-
 
 .topNav {
     height: 4rem;

@@ -53,8 +53,6 @@
     </div>
 </section>
 
-<p>{y}</p>
-
 <section class="architecture">
     <div class="architecture__container">
         <h1 class="architecture__title">General Architecture</h1>
