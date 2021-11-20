@@ -1,0 +1,135 @@
+@import 'Root.scss';
+.bd-container {
+    width: 100%;
+    height: calc(100vh - 5rem);
+    background-color: $grey;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    padding-top: 5rem;
+    margin-top: $header-height;
+    color: $dark-grey;
+}
+
+.bd-box {
+    width: 80vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 2rem;
+    border-radius: 5px;
+
+    &-title {
+        font-size: 1.25rem;
+        column-rule: $dark-grey;
+        margin-bottom: 1rem;
+    }
+
+    & p {
+        font-size: 0.8rem;
+    }
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+    width: 100%;
+
+    .input-group {
+        width: 100%;
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: row;
+        justify-items: center;
+        gap:15px;
+
+        & label {
+            font-size: 1.25rem;
+        }
+        
+        & input {
+            width: 100%;
+            font-family: $poppins;
+            height: 2rem;
+            border-top: 0;
+            border-right: 0;
+            border-left: 0;
+            border-bottom: 1px solid $dark-grey;
+            margin-bottom: 1rem;
+
+            &:focus {
+                border-right: 0;
+                border-left: 0;
+                border-bottom: 1px solid $dark-grey;
+                outline: none;
+            }
+        }
+    }
+}
+
+.btn {
+    width: fit-content;
+    padding: 10px 20px 10px 20px;
+    font-family: $poppins;
+    cursor: pointer;
+}
+
+.btn-blue {
+    background-color: $light-blue;
+    color: #fff;
+    border:none;
+
+    &:hover {
+        background-color: $light-blue-secondary;
+        transition: .3s ease;
+    }
+}
+
+.btn-yellow {
+    background-color: $yellow;
+    color: #fff;
+    border:none;
+
+    &:hover {
+        background-color: $yellow-secondary;
+        transition: .3s ease;
+    }
+    &-p {
+        background-color: $yellow-secondary;
+    }
+}
+
+.cursor {
+    cursor: context-menu;
+}
+
+.mt-2 {
+    margin-top: 2rem;
+}
+
+.ml-2 {
+    margin-left: 2rem;
+}
+
+.box-white {
+    background-color: #fff;
+}
+
+
+// MEDIA QUERIES FOR MEDIUM DEVICES
+@media screen and(min-width: 768px){
+
+    .bd-box {
+        width: 50vw;
+    }
+}
+
+//MEDIA QUERIES FOR LARGE DEVICE
+@media screen and(min-width: 1024px){
+
+    .bd-box {
+        width: 30vw;
+    }
+}

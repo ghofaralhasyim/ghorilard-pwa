@@ -1,0 +1,94 @@
+diff --git a/node_modules/svelte-session-manager/src/Login.svelte b/node_modules/svelte-session-manager/src/Login.svelte
+index 9e49806..90bcb52 100644
+--- a/node_modules/svelte-session-manager/src/Login.svelte
++++ b/node_modules/svelte-session-manager/src/Login.svelte
+@@ -4,12 +4,12 @@
+   export let endpoint;
+   export let session;
+   export let result;
++  export let message;
+ 
+   let username = "";
+   let password = "";
+ 
+   let active = false;
+-  let message;
+ 
+   async function submit() {
+     if (active) {
+@@ -46,7 +46,6 @@
+           aria-required="true"
+           maxlength="75"
+           size="32"
+-          autofocus
+           autocorrect="off"
+           autocapitalize="off"
+           autocomplete="username"
+diff --git a/node_modules/svelte-session-manager/src/login.mjs b/node_modules/svelte-session-manager/src/login.mjs
+index 499d0c7..42c2784 100644
+--- a/node_modules/svelte-session-manager/src/login.mjs
++++ b/node_modules/svelte-session-manager/src/login.mjs
+@@ -6,9 +6,11 @@ import { JSONContentTypeHeader } from "./constants.mjs";
+  * Executes a POST on the endpoint url expecting username, and password as json
+  * @param {Session} session to be opened
+  * @param {string} endpoint authorization url
+- * @param {string} username id of the user
++ * @param {string} username username of the user
+  * @param {string} password user credentials
+  * @param {object} tokenmap token names in response to internal known values
++ * @param {string} _id username of the user
++ * @param {Integer} auth
+  * @return {string} error message in case of failure or undefined on success
+  */
+ export async function login(
+@@ -16,6 +18,8 @@ export async function login(
+   endpoint,
+   username,
+   password,
++  _id,
++  auth,
+   tokenmap = {
+     access_token: "access_token",
+     refresh_token: "refresh_token"
+@@ -26,8 +30,8 @@ export async function login(
+       method: "POST",
+       headers: JSONContentTypeHeader,
+       body: JSON.stringify({
+-        username,
+-        password
++        "email_user":username,
++        "password":password
+       })
+     });
+     if (response.ok) {
+@@ -37,10 +41,13 @@ export async function login(
+       }
+       session.update({
+         endpoint,
++        _id: data._id,
+         username,
++        auth: data.auth,
+         access_token: data[tokenmap.access_token],
+-        refresh_token: data[tokenmap.refresh_token]
++        refresh_token: data[tokenmap.refresh_token],
+       });
++      location.reload();
+     } else {
+       session.update({ username });
+       return handleFailedResponse(response);
+diff --git a/node_modules/svelte-session-manager/src/session.mjs b/node_modules/svelte-session-manager/src/session.mjs
+index 2020a59..99c8283 100644
+--- a/node_modules/svelte-session-manager/src/session.mjs
++++ b/node_modules/svelte-session-manager/src/session.mjs
+@@ -6,8 +6,10 @@ import { JSONContentTypeHeader } from "./constants.mjs";
+  * @property {string} username user name (id)
+  * @property {string} access_token JWT token
+  * @property {string} refresh_token JWT token
++ * @property {string} _id
++ * @property {string} auth
+  */
+-const storeKeys = ["username", "refresh_token", "access_token"];
++const storeKeys = ["username", "refresh_token", "access_token","_id","auth"];
+ 
+ /**
+  * Time required to execute a refresh

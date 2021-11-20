@@ -1,0 +1,139 @@
+@import 'Root.scss';
+.bd-grid {
+    display: grid;
+    grid-template-columns: 100%;
+    margin-right: 1rem;
+    margin-left: 1rem;
+}
+
+.header {
+    background-color: $dark-blue;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+
+:global(.active){
+    color: $light-blue !important;
+}
+
+.nav {
+    height: 5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &__menu {
+        position: relative;
+    }
+
+    @media screen and(max-width:768px){
+        &__menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 70%;
+            height: 100%;
+            padding: 3.5rem 1.5rem 0;
+            background: rgba(6, 14, 31, 0.95);
+            transition: .5s;
+            backdrop-filter: blur(10px);
+        }
+    }
+
+    &__close {
+        position: absolute;
+        top: .75rem;
+        right: 1rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #fff;
+    }
+
+    &__item {
+        margin-bottom: 2rem;
+    }
+
+    &__link {
+        color: #fff;
+        font-family: $poppins;
+    }
+
+    &__brand {
+        color: #fff;
+        font-family: $poppins;
+
+        & img {
+            max-width: 5rem;
+        }
+    }
+
+    &__link:hover {
+        color: $light-blue;
+    }
+
+    &__toggle {
+        font-size: 1.5rem;
+        cursor:pointer;
+        color: #fff;
+    }
+}
+
+.show {
+    right: 0;
+}
+
+.d-none {
+    display: none;
+}
+
+// MEDIA QUERIES FOR MEDIUM DEVICES
+@media screen and(min-width: 768px){
+
+    .bd-grid {
+        width: 90%;
+    }
+
+    .header {
+        display: flex;
+        justify-content: center;
+    }
+
+    .nav {
+        height: 5rem;
+
+        &__nav {
+            align-items: center;
+            padding-top: 0;
+        }
+        &__link {
+            text-transform: initial;
+        }
+        &__menu {
+            display: flex;
+            column-gap: 1rem;
+        }
+        &__list {
+            display: flex;
+            flex-direction: row;
+            column-gap: 4rem;
+            align-items: center;
+        }
+        &__toggle, &__close {
+            display: none;
+        }
+        &__item {
+            margin: 0;
+        }
+    }
+}
+
+//MEDIA QUERIES FOR LARGE DEVICE
+@media screen and(min-width: 1024px){
+
+    .bd-grid {
+        width: 85%;
+    }
+}
