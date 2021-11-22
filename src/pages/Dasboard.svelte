@@ -15,16 +15,16 @@
     import Test from '../Dasboard-comp/Test.svelte';
     import Analytics from '../Dasboard-comp/Analytics.svelte';
     import { apiData, activeTabs, id_device } from '../Dasboard-comp/data';
-
+    
     let sidebarToggled = false;
-    $activeTabs = 'Helpdesk';
-    $id_device = 'Rt45rgy';
+    $activeTabs = 'Dasboard';
+    $id_device = '';
 
     const changeTabs = (e) => {
         $activeTabs = e;
     }
     let error = null;
-
+    
     async function getData() {
         if(session.isValid){
             const parseJSON = (resp) => (resp.json ? resp.json() : resp);
@@ -90,7 +90,7 @@
         </div>
     </div>
 
-    <section class="bd-dasboard" id="bd-dasboard" class:sidebarToggled={sidebarToggled}>
+    <section class="bd-dasboard" id="bd-dasboard" class:sidebarToggled={sidebarToggled} >
         <nav class="topNav">
             <div class="topNav__toggler">
                 <i class="ri-function-line" id="nav-toggler" on:click="{() => sidebarToggled = !sidebarToggled}"></i>

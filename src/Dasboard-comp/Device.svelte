@@ -223,7 +223,7 @@ Loading ...
 {:then}
 <div class="row">
 
-<div class="col-md-8 col-lg-8 col-xl-9">
+<div class="col-md-12 col-lg-8 col-xl-9">
 
     <div class="row">
         <div class="col " style="padding:5px;">
@@ -264,7 +264,7 @@ Loading ...
 
 </div>
 
-<div class="col col-lg-4 col-xl-3" style="padding:5px;">
+<div class="col col-md-12 col-lg-4 col-xl-3" style="padding:5px;">
     <div class="cursor-pointer" on:click={() => deviceRedirect('Analytics',$id_device,$nama_kolam)} style="margin-bottom: 10px;" >
         <div class="row card pd-1">
              <div class="col-2 text-middle text-center">

@@ -7,29 +7,29 @@
     let session = new Session(localStorage);
 
     let message;
-    let dariserver;
-    const socket = io("https://ghorilard.herokuapp.com/");
+    let admin = null;
 
-    // socket.on('tests', data => {
-    //     console.log("THISSSSSS :"+data);
-    //     dariserver = data;
-    // });
-    // socket.emit("text",'tes')
-
-
-    socket.on('connect', () => {
-        socket.emit('chat','Alvin');
-        socket.on('comment', data => {
-            console.log(data);
-            $comment = [...$comment,data];
-        })
-    });
+    const socket = io("https://ghorilard.herokuapp.com");
 
     let xh;
-    onMount(() => {
+     onMount(() => {
         let chatSection = document.getElementById('chatSection');
         let x = chatSection.scrollHeight;
         chatSection.scrollTop = xh;
+
+        socket.on('connect', () => {
+            socket.on("admin_id", data=>{
+                console.log("SOCKET ID ADMIN :" +data);
+                admin = data;   
+            });
+            console.log('SOCKET ID IS : '+socket.id);
+        });
+        console.log(admin);
+    });
+    console.log(socket.id)
+    socket.on("helpdesk_rep", (id,msg,id_user)=> {
+        console.log("SOCKET HELPDESK ADMIN : " + msg );
+        $comment = [...$comment,{"auth":1,"text":msg}];
     });
 
     let value='',
@@ -44,43 +44,55 @@
 	
 	$: rows = (value.match(/\n/g) || []).length + 1 || 1;
 
-    async function sendChat(){
-        if(session.isValid) {
-            const parseJSON = (resp) => (resp.json ? resp.json() : resp);
-            const checkStatus = (resp) => {
-                if(resp.status >= 200 && resp.status < 300){
-                    value = '';
-                    return resp;
-                }
-                return parseJSON(resp).then((resp) => {
-                    throw resp;
-                });
-            }
-
+    const parseJSON = (resp) => (resp.json ? resp.json() : resp);
+    const checkStatus = (resp) => {
+        if(resp.status >= 200 && resp.status < 300){
+            value = '';
+            return resp;
+        }
+        return parseJSON(resp).then((resp) => {
+            throw resp;
+        });
+    }
+    async function getChat(){
+        if(session.isValid){
             try {
-                const res = await fetch('https://ghorilard.herokuapp.com/comment', {
-                    method: "POST",
+                const res = await fetch('https://ghorilard.herokuapp.com/comment',{
+                    method: 'GET',
                     headers: {
-                        'Content-Type' : 'application/json',
-                        'token': session.access_token,
+                        'Content-type' : 'application/json',
+                        'token' : session.access_token,
                         '_id': session._id
-                    },
-                    body: JSON.stringify({
-                        "desc_comment": value,
-                    })
-                    }).then(checkStatus)
-                    .then(parseJSON)
-            } catch (e) { 
-                message = e;
+                    }
+                }).then(checkStatus)
+                .then(parseJSON)
+                .then(data =>{
+                    $comment = data;
+                })
+            } catch (error) {
+                message = error;
             }
         }
-        socket.emit('chat',value);
-        socket.on('comment', data => {
-            console.log(data);
-            $comment = [...$comment,data];
-        })
     }
-    console.log($comment.length);
+
+    async function cekAdmin(){
+        await socket.on("admin", data =>{
+            admin = data;
+            console.log("VARIFY SOCKET: " + data);
+        });
+    }
+
+    async function sendChat(){
+        if(session.isValid) {
+            await cekAdmin();
+            console.log('SEND SOCKET :' + admin);
+            socket.emit("helpdesk",admin,value,socket.id);
+            $comment = [...$comment,{"auth":2,"text":value}];
+            console.log("socket sended");
+            value = '';
+        }
+    }
+    console.log($comment);
 </script>
 
 <div class="row">
@@ -129,15 +141,23 @@
                                 Oh!
                             </div>
                         </div>
-                        {#if $comment.length != 0}
+                        <!-- {#if $comment.length != null} -->
                             {#each $comment as text}
-                            <div class="chat-section-chat-reply">
-                                <div class="buble">
-                                    {text}
-                                </div>
-                            </div>
+                                {#if text.auth == 1}
+                                    <div class="chat-section-chat-reply">
+                                        <div class="buble">
+                                            {text.text}
+                                        </div>
+                                    </div>
+                                {:else}
+                                    <div class="chat-section-chat-send">
+                                        <div class="buble-send">
+                                            {text.text}
+                                        </div>
+                                    </div>
+                                {/if}
                             {/each}
-                        {/if}
+                        <!-- {/if} -->
                     </div>
                     <form on:submit|preventDefault={sendChat} class="form-chat mt-1">
                         <textarea rows="{rows}" style="--height: auto" bind:this={textarea} bind:value on:resize={grow}></textarea>

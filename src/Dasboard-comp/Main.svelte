@@ -15,7 +15,7 @@
 
 <div class="row">
 
-<div class="col-md-8 col-lg-8 col-xl-9">
+<div class="col-md-12 col-lg-8 col-xl-9">
 
     <div class="row">
         <div class="col col-sm col-md-5 col-lg-4" style="padding:5px;">
@@ -78,7 +78,7 @@
 
 </div>
 
-<div class="col col-lg-4 col-xl-3" style="padding:5px;">
+<div class="col col-md-12 col-lg-4 col-xl-3" style="padding:5px;">
    <div class="hover-light-blue cursor-pointer" on:click={() => changeTabs('Helpdesk')}>
        <div class="row card bg-light-blue pd-1 ">
             <div class="col-2 text-middle text-center">
