@@ -127,7 +127,7 @@
                             Overall
                         </div>
                         <div class="col-2 col-sm-3 text-center" style="display: flex;">
-                            {average_data.average_temperature}
+                            {average_data.average_temperature}&#176;C
                         </div>
                         <div class="col-2 col-sm-3 text-center" style="display: flex;">
                             {average_data.average_ph}
@@ -138,7 +138,7 @@
                             Morning 07.00 - 10.00
                         </div>
                         <div class="col-2 col-sm-3 text-center" style="display: flex;">
-                            {average_data.mor_average_temp}
+                            {average_data.mor_average_temp}&#176;C
                         </div>
                         <div class="col-2 col-sm-3 text-center" style="display: flex;">
                             {average_data.mor_average_ph}
@@ -149,7 +149,7 @@
                             Noon 10.00 - 16.00
                         </div>
                         <div class="col-2 col-sm-3 text-center" style="display: flex;">
-                            {average_data.midday_average_temp}
+                            {average_data.midday_average_temp}&#176;C
                         </div>
                         <div class="col-2 col-sm-3 text-center" style="display: flex;">
                             {average_data.midday_average_ph}
