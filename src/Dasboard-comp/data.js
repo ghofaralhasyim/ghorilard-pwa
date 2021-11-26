@@ -7,7 +7,7 @@ export const dataDevice = writable([]);
 export const subTabs = writable('');
 export const nama_kolam = writable('');
 export const monitoring_data = writable(); // ALL DATA HISTORY MONITORING
-export const graphautodata = writable(); //WRITABLE DATA FOR AUTO GRAPH
+export const graphautodata = writable([]); //WRITABLE DATA FOR AUTO GRAPH
 export const id_device = writable();
 export const comment = writable([]);
 
