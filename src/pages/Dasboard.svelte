@@ -17,8 +17,8 @@
     import { apiData, activeTabs, id_device } from '../Dasboard-comp/data';
     
     let sidebarToggled = false;
-    $activeTabs = 'Device';
-    $id_device = 'Rt45rgy';
+    $activeTabs = 'Dasboard';
+    $id_device = '';
 
     const changeTabs = (e) => {
         $activeTabs = e;

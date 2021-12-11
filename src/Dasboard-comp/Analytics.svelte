@@ -2,7 +2,6 @@
     import { monitoring_data, activeTabs, nama_kolam } from './data';
     import { Session } from 'svelte-session-manager';
     import { push } from 'svelte-spa-router';
-    import Autograph from '../components/Autograph.svelte';
 
     import { chart } from "svelte-apexcharts"
 
@@ -14,7 +13,6 @@
     let morning_data = [];
     let miday_data = [];
     let interval_date = 20;
-
     let optionsChart;
     let graphautodata = [];
 
@@ -35,27 +33,30 @@
             data.forEach(element => {
                 var eldate = new Date(element.timestamp);
                 var week_date = new Date().setDate(new Date().getDate() - int_date);
-
+                console.log("hours " +eldate.getHours());
                 if (eldate.getTime() > week_date) {
                     week_data.push(element);
                     graph_week_ph.push([eldate.getTime(),element.ph_meter]);
                     graph_week_temp.push([eldate.getTime(),element.water_temp]);
-                    if (eldate.getHours() >= 13 && eldate.getHours() < 23) {
+                    if (eldate.getHours() >= 0 && eldate.getHours() < 10 ) {
                         morning_data = [...morning_data,element];
+                    }
+                    if (eldate.getHours() > 10 && eldate.getHours() < 23) {
+                        miday_data = [...miday_data,element];
                     }
                 }
             });
 
             graphautodata = week_data;
-            let i = 0;
             let graphData_ph = [];
             let graphData_temperature = [];
-            graphautodata.forEach(element => {
+            week_data.forEach(element => {
                 var eldate = new Date(element.timestamp);
-                graphData_temperature[i] = [eldate.getTime(),element.water_temp];
-                graphData_ph[i] = [eldate.getTime(),element.ph_meter];
-                i++;
+                console.log("hours 1 " +eldate.getHours());
+                graphData_temperature = [...graphData_temperature,[eldate.getTime(),element.water_temp]];
+                graphData_ph = [...graphData_ph,[eldate.getTime(),element.ph_meter]];
             });
+        
             optionsChart = {
                 chart: {
                     type: 'area',
@@ -96,17 +97,21 @@
                 ],
                 yaxis: [
                 {
-                    max: 35
+                    max: 35,
+                    
                 }
                 ],
                 xaxis:
                     {
                         type: 'datetime',
                         tickAmount: 6,
+                        labels: {
+                            datetimeUTC: false
+                        },
                     },
                 tooltip: {
                     x: {
-                        format: 'dd MMM yyyy'
+                        format: 'dd MMM yyyy HH : mm'
                     },
                 },
                 markers: {
@@ -124,6 +129,7 @@
                 },
             };
 
+            //overall
             var data_length = 0;
             var average_temp = 0;
             var average_ph = 0;
@@ -138,6 +144,7 @@
             average_ph = average_ph / data_length;
             average_ph = average_ph.toFixed(2);
             
+            //morning
             var x_average_temp = 0;
             var x_average_ph = 0;
             morning_data.forEach(element => {
@@ -145,17 +152,26 @@
                 x_average_ph = x_average_ph + element.ph_meter;
             });
 
+            //miday
+            var y_average_temp = 0;
+            var y_average_ph = 0;
+            miday_data.forEach(element => {
+                y_average_temp = y_average_temp + element.water_temp;
+                y_average_ph = y_average_ph + element.ph_meter;
+            })
 
             x_average_ph = (x_average_ph / morning_data.length).toFixed(2);
             x_average_temp = (x_average_temp / morning_data.length).toFixed(2);
+            y_average_temp = (y_average_temp / miday_data.length).toFixed(2);
+            y_average_ph = (y_average_ph / miday_data.length).toFixed(2);
             
             average_data = {
                 'average_temperature' :  average_temp,
                 'average_ph' : average_ph,
                 'mor_average_temp' : x_average_temp,
                 'mor_average_ph': x_average_ph,
-                'midday_average_temp': NaN,
-                'midday_average_ph': NaN,
+                'midday_average_temp': y_average_temp,
+                'midday_average_ph': y_average_temp,
             };
             console.log(graphautodata);
         }
