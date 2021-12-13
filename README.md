@@ -1,5 +1,5 @@
 # Ghorilard IoT : Front End
-##### Visit -> Ghorilard.vercel.app
+##### Visit [Ghorilard.vercel.app](Ghorilard.vercel.app)
 
 [![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
 
@@ -55,5 +55,5 @@ npm run dev
 
 ## Ghorilard Project
 
-- Backend Development : github.com/RichardAlvin/be-ghorilard
-- End Device Final Produc and Configuration : github.com/ghofaralhasyim/end-device-ghorilard
+- Backend Development : [github.com/RichardAlvin/be-ghorilard](github.com/RichardAlvin/be-ghorilard)
+- End Device Final Produc and Configuration : [github.com/ghofaralhasyim/end-device-ghorilard](github.com/ghofaralhasyim/end-device-ghorilard)
