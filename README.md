@@ -1,5 +1,5 @@
 # Ghorilard IoT : Front End
-##### Visit -> [Ghorilard.vercel.app](Ghorilard.vercel.app)
+##### Visit -> Ghorilard.vercel.app
 
 [![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
 
