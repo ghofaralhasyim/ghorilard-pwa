@@ -41,7 +41,6 @@ Src/
     ├── toor
 └── pages/
 └── sass/
-└── pages/
 ```
 
 ## Installation
